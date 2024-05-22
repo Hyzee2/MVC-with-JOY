@@ -4,9 +4,13 @@
 <%@ page import="java.util.*"%>
 <%@ page import="net.notice.db.*"%>
 <%@ page import="net.joystory.db.*"%>
+<%@ page import="net.news.db.*"%>
 <%
 List<NoticeBean> noticelist = (List<NoticeBean>) request.getAttribute("noticelist");
 List<JoyStoryBean> joyStoryList = (List<JoyStoryBean>) request.getAttribute("joyStoryList");
+List<NewsBean> newsList = (List<NewsBean>) request.getAttribute("newsList");
+Boolean isAdmin = (Boolean) session.getAttribute("admin");
+boolean admin = isAdmin != null && isAdmin;
 %>
 <!DOCTYPE html>
 <html>
@@ -153,6 +157,25 @@ List<JoyStoryBean> joyStoryList = (List<JoyStoryBean>) request.getAttribute("joy
 	background-color: white;
 	color: black;
 }
+
+.button {
+	width: 120px;
+	height: 35px;
+	background-color: #FFD700;
+	color: black;
+	font-size: 14px;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+}
+
+.button:hover {
+	background-color: #1d5ea4;
+	color: white;
+	transition: background-color 0.3s, color 0.3s;
+}
 </style>
 </head>
 
@@ -181,7 +204,7 @@ List<JoyStoryBean> joyStoryList = (List<JoyStoryBean>) request.getAttribute("joy
 				<div
 					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
 					<a href="./JoyStoryList.jo?data-target=joyStory">JOY스토리</a> <a
-						href="./NoticeList.no?data-target=pressRelease">언론보도</a> <a
+						href="./NewsList.ne?data-target=pressRelease">언론보도</a> <a
 						href="./NoticeList.no?data-target=notices">공지사항</a> <a
 						href="./NoticeList.no?data-target=transparency">투명경영</a>
 				</div>
@@ -197,7 +220,8 @@ List<JoyStoryBean> joyStoryList = (List<JoyStoryBean>) request.getAttribute("joy
 				<span class="hover:text-blue-600 cursor-pointer px-8 font-medium">후원하기</span>
 				<div
 					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
-					<a href="#">후원하기</a> <a href="#">후원기업/단체</a>
+					<a href="./DonationList.do?data-target=donation">후원하기</a> <a
+						href="./DonationList.do?data-target=company">후원기업/단체</a>
 				</div>
 			</div>
 			<div class="dropdown relative">
@@ -211,6 +235,7 @@ List<JoyStoryBean> joyStoryList = (List<JoyStoryBean>) request.getAttribute("joy
 		<!-- 후원하기 버튼 -->
 		<div class="flex items-center">
 			<button
+				onclick="location.href='./DonationList.do?data-target=donation';"
 				class="donation-btn bg-yellow-400 text-2xl font-bold h-full w-80 pl-0 mr-0">후원하기</button>
 		</div>
 	</div>
@@ -231,7 +256,7 @@ List<JoyStoryBean> joyStoryList = (List<JoyStoryBean>) request.getAttribute("joy
 				<a href="./JoyStoryList.jo?data-target=joyStory"
 					class="tab active-tab block py-4 px-20 text-2xl font-medium text-center flex-1"
 					data-target="joyStory">JOY스토리</a> <a
-					href="./NoticeList.no?data-target=pressRelease"
+					href="./NewsList.ne?data-target=pressRelease"
 					class="tab inactive-tab block py-4 px-20 text-2xl font-medium text-center flex-1"
 					data-target="pressRelease">언론보도</a> <a
 					href="./NoticeList.no?data-target=notices"
@@ -252,18 +277,23 @@ List<JoyStoryBean> joyStoryList = (List<JoyStoryBean>) request.getAttribute("joy
 				<div class="p-8">
 					<h2 class="text-5xl font-bold mb-10">JOY스토리</h2>
 					<div class="grid grid-cols-3 gap-4">
-					<%if(joyStoryList != null){ %>
+						<%
+						if (joyStoryList != null) {
+						%>
 						<c:forEach var="joyStory" items="${joyStoryList}">
 							<div class="bg-white p-4">
-								<a href="./JoyDetailAction.jo?data-target=joyStory&num=${joyStory.story_id}">
+								<a
+									href="./JoyDetailAction.jo?data-target=joyStory&num=${joyStory.story_id}">
 									<img src="${joyStory.image_url}" alt="${joyStory.title}"
-										class="w-full h-96 object-cover mb-4">
+									class="w-full h-96 object-cover mb-4">
 									<p class="text-lg font-light">${joyStory.title}</p>
 									<p class="text-gray-500 mt-4 font-light text-xs">${joyStory.post_date}</p>
 								</a>
 							</div>
 						</c:forEach>
-						<%} %>
+						<%
+						}
+						%>
 					</div>
 				</div>
 			</div>
@@ -272,8 +302,26 @@ List<JoyStoryBean> joyStoryList = (List<JoyStoryBean>) request.getAttribute("joy
 		<div id="pressRelease" class="tab-content hidden">
 			<div class="bg-white">
 				<div class="p-8">
-					<h2 class="text-5xl font-bold mb-6">언론보도 목록</h2>
-					<p>여기에 언론보도 컨텐츠가 표시됩니다.</p>
+					<h2 class="text-5xl font-bold mb-6">언론보도</h2>
+					<div class="grid grid-cols-3 gap-4">
+						<%
+						if (newsList != null) {
+						%>
+						<c:forEach var="news" items="${newsList}">
+							<div class="bg-white p-4">
+								<a
+									href="./NewsDetailAction.ne?data-target=pressRelease&num=${news.report_id}">
+									<img src="${news.image_url}" alt="${news.title}"
+									class="w-full h-96 object-cover mb-4">
+									<p class="text-lg font-light">${news.title}</p>
+									<p class="text-gray-500 mt-4 font-light text-xs">${news.post_date}</p>
+								</a>
+							</div>
+						</c:forEach>
+						<%
+						}
+						%>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -293,7 +341,7 @@ List<JoyStoryBean> joyStoryList = (List<JoyStoryBean>) request.getAttribute("joy
 						</thead>
 						<tbody>
 							<%
-							if(noticelist != null){
+							if (noticelist != null) {
 								for (int i = noticelist.size() - 1; i >= 0; i--) {
 									NoticeBean notice = (NoticeBean) noticelist.get(i);
 							%>
@@ -308,11 +356,21 @@ List<JoyStoryBean> joyStoryList = (List<JoyStoryBean>) request.getAttribute("joy
 									class="py-4 px-6 border-b text-right text-base text-gray-400"><%=notice.getRead_count()%></td>
 							</tr>
 							<%
-								}
+							}
 							}
 							%>
 						</tbody>
 					</table>
+
+					<%
+					if (admin) {
+					%>
+					<!-- 글쓰기 버튼 -->
+					<a href="./NoticeWriteView.no?data-target=notices"
+						class="button mt-16"> 글쓰기 </a>
+					<%
+					}
+					%>
 				</div>
 			</div>
 		</div>

@@ -41,6 +41,7 @@ import net.user.db.UserDAO;
 				 System.out.println("관리자로 로그인 완료");
 				 HttpSession session = request.getSession();
 				 session.setAttribute("email", email);
+				 session.setAttribute("admin", true);
 				 
 				 forward.setRedirect(true); // 리다이렉트로 전송 ( url 변경) 
 				 forward.setPath("./Main.lo?email="+email);

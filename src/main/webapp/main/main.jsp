@@ -326,7 +326,7 @@ body {
 	<!-- 상단 바 -->
 	<div
 		class="font-light bg-gray-100 h-11 relative flex justify-end items-center pr-10 space-x-4 sticky-top">
-		<button class="main-color text-white w-32 h-11 text-sm">기부금영수증</button>
+		<button class="main-color text-white w-32 h-11 text-sm" onclick="window.open('./ReceiptLogin.do', '_blank');">기부금영수증</button>
 		<%if(email == null){ %>
 		<button id="openLoginModal" class="text-gray-600 text-sm">로그인</button>
 		<%}else{ %>
@@ -424,7 +424,7 @@ body {
 				<div
 					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
 					<a href="./JoyStoryList.jo?data-target=joyStory">JOY스토리</a> <a
-						href="./NoticeList.no?data-target=pressRelease">언론보도</a> <a
+						href="./NewsList.ne?data-target=pressRelease">언론보도</a> <a
 						href="./NoticeList.no?data-target=notices">공지사항</a> <a
 						href="./NoticeList.no?data-target=transparency">투명경영</a>
 				</div>
@@ -440,7 +440,7 @@ body {
 				<span class="hover:text-blue-600 cursor-pointer px-8 font-medium">후원하기</span>
 				<div
 					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
-					<a href="#">후원하기</a> <a href="#">후원기업/단체</a>
+					<a href="./DonationList.do?data-target=donation">후원하기</a> <a href="./DonationList.do?data-target=company">후원기업/단체</a>
 				</div>
 			</div>
 			<div class="dropdown relative">
@@ -453,7 +453,7 @@ body {
 		</div>
 		<!-- 후원하기 버튼 -->
 		<div class="flex items-center">
-			<button
+			<button onclick="location.href='./DonationList.do?data-target=donation';"
 				class="donation-btn bg-yellow-400 text-2xl font-bold h-full w-80 pl-0 mr-0">후원하기</button>
 		</div>
 	</div>

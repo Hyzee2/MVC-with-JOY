@@ -49,7 +49,7 @@ public class NoticeDAO {
 			else
 				num = 1;
 
-			sql = "insert into Notices (notice_id,title,content,post_date,file_name) values (?,?,?,now(),?,?)";
+			sql = "insert into Notices (notice_id,title,content,post_date,file_name,read_count) values (?,?,?,now(),?,?)";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
@@ -139,7 +139,7 @@ public class NoticeDAO {
 	// 공지사항 상세보기
 	public NoticeBean getDetail(int num) throws Exception { // 게시글 번호를 매개변수로 받는다
 		NoticeBean notice = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement("select * from Notices where notice_id = ?");
 			pstmt.setInt(1, num);
@@ -171,6 +171,35 @@ public class NoticeDAO {
 				}
 		}
 		return null;
+	}
+
+	// 공지사항 삭제
+	public boolean noticeDelete(int num) {
+
+		String sql = "delete from Notices where notice_id=?";
+
+		int result = 0;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			result = pstmt.executeUpdate();
+			if (result == 0) {
+				return false;
+			}else {
+			return true;
+			}
+		} catch (Exception ex) {
+			System.out.println("noticeDelete 실패 : " + ex);
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception ex) {
+			}
+		}
+
+		return false;
 	}
 
 }

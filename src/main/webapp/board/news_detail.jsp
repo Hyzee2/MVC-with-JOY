@@ -1,15 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
-<%@ page import="net.joystory.db.*"%>
+<%@ page import="net.news.db.*"%>
 <%
-JoyStoryBean joystory = (JoyStoryBean) request.getAttribute("joydata");
-JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
+NewsBean news = (NewsBean) request.getAttribute("newsdata");
+NewsBean before = (NewsBean) request.getAttribute("newsBefore");
 %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
-<title><%=joystory.getTitle()%></title>
+<title><%=news.getTitle()%></title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -17,7 +17,7 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
             const sections = document.querySelectorAll('.tab-content');
 
             const urlParams = new URLSearchParams(window.location.search);
-            const target = urlParams.get('data-target') || 'joyStory'; // 기본값을 'joyStory'로 설정
+            const target = urlParams.get('data-target') || 'pressRelease'; // 기본값을 'joyStory'로 설정
 
             // 초기 탭 및 컨텐츠 설정
             tabs.forEach(tab => {
@@ -281,23 +281,23 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
 	<div class="container mx-auto mt-10 mb-28 max-w-7xl">
 		<div class="bg-white">
 			<div class="p-8">
-				<h2 class="text-5xl font-bold mb-10">JOY스토리</h2>
+				<h2 class="text-5xl font-bold mb-10">언론보도</h2>
 
-				<h1 class="text-2xl font-light title mb-4"><%=joystory.getTitle()%></h1>
+				<h1 class="text-2xl font-light title mb-4"><%=news.getTitle()%></h1>
 				<div class="text-sm font-light mb-6 text-gray-500">
-					조이스토리&nbsp;&nbsp;
-					<%=joystory.getPost_date()%></div>
+					언론보도&nbsp;&nbsp;
+					<%=news.getPost_date()%></div>
 				<div class="border-b border-gray-300 mb-6"></div>
-				<img src="<%=joystory.getImage_url()%>" alt="<%=joystory.getTitle()%>"
+				<img src="<%=news.getImage_url()%>" alt="<%=news.getTitle()%>"
 										class="w-full h-full object-cover mb-4">
-				<div class="content font-light mb-6 text-lg"><%=joystory.getDescription()%></div>
+				<div class="content font-light mb-6 text-lg"><%=news.getDescription()%></div>
 					
 				</div>
 				<!-- 이전 Joy 스토리 -->
 				<%
 				if (before.getTitle() != null) {
 				%>
-				<a href="./JoyDetailAction.jo?data-target=joyStory&num=<%=before.getStory_id()%>"
+				<a href="./NewsDetailAction.ne?data-target=pressRelease&num=<%=before.getReport_id()%>"
 					class="font-light text-base">
 					<div class="previous-title p-2">
 						<span class="text-gray-400 font-light text-lg">∨</span>&nbsp;&nbsp;&nbsp;
@@ -309,7 +309,7 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
 				%>
 				<div class="border-b border-gray-300 mb-3"></div>
 				<!-- 목록 버튼 -->
-				<a href="./JoyStoryList.jo?data-target=joyStory" class="button"> 목록
+				<a href="./NewsList.ne?data-target=pressRelease" class="button"> 목록
 				</a>
 			</div>
 		</div>

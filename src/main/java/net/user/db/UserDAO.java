@@ -83,7 +83,7 @@ public class UserDAO {
 
 		// 회원이 1 / 관리자 0 / 비회원 -1
 		if (conn != null) {
-			String sql = "SELECT email,password FROM Users where email=?";
+			String sql = "SELECT email,password,admin FROM Users where email=?";
 
 			System.out.println("이건 로그인 체크하는 과정중 " + email);
 			System.out.println("이건 로그인 체크하는 과정중 " + password);
@@ -98,10 +98,13 @@ public class UserDAO {
 				while (rs.next()) {
 					System.out.println("이건 db에서 가져옴 " + rs.getString("email"));
 					System.out.println("이건 db에서 가져옴 " + rs.getString("password"));
-					if (email.equals("admin@naver.com") && password.equals("1234")) {// 관리자
-						return 0; // 관리자
-					}
+//					if (email.equals("admin@naver.com") && password.equals("1234")) {// 관리자
+//						return 0; // 관리자
+//					}
 					if (rs.getString("email").equals(email) && rs.getString("password").equals(password)) {
+						if(rs.getBoolean("admin")) {
+							return 0; // 관리자
+						}
 						return 1; // 회원
 					}
 				}

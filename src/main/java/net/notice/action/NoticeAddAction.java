@@ -36,7 +36,7 @@ public class NoticeAddAction implements Action {
 
 			MultipartRequest multi = null; // 파일 업로드
 
-			multi = new MultipartRequest(request, realFolder, fileSize, "euc-kr", new DefaultFileRenamePolicy());
+			multi = new MultipartRequest(request, realFolder, fileSize, "UTF-8", new DefaultFileRenamePolicy());
 
 			noticedata.setTitle(multi.getParameter("title"));
 			noticedata.setContent(multi.getParameter("content"));
@@ -51,7 +51,7 @@ public class NoticeAddAction implements Action {
 			System.out.println("공지사항 등록 완료");
 
 			forward.setRedirect(true); // 리다이렉트 방식으로 전송
-			forward.setPath("./NoticeList.no");
+			forward.setPath("./NoticeList.no?data-target=notices");
 			return forward;
 
 		} catch (Exception ex) {

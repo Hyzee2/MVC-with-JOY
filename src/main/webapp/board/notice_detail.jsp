@@ -4,6 +4,8 @@
 <%
 NoticeBean notice = (NoticeBean) request.getAttribute("noticedata");
 NoticeBean before = (NoticeBean) request.getAttribute("noticeBefore");
+Boolean isAdmin = (Boolean) session.getAttribute("admin");
+boolean admin = isAdmin != null && isAdmin;
 %>
 <!DOCTYPE html>
 <html>
@@ -187,6 +189,7 @@ NoticeBean before = (NoticeBean) request.getAttribute("noticeBefore");
 	background-color: #1d5ea4;
 	color: white;
 	transition: background-color 0.3s, color 0.3s;
+	
 }
 </style>
 </head>
@@ -216,7 +219,7 @@ NoticeBean before = (NoticeBean) request.getAttribute("noticeBefore");
 				<div
 					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
 					<a href="./JoyStoryList.jo?data-target=joyStory">JOY스토리</a> <a
-						href="./NoticeList.no?data-target=pressRelease">언론보도</a> <a
+						href="./NewsList.ne?data-target=pressRelease">언론보도</a> <a
 						href="./NoticeList.no?data-target=notices">공지사항</a> <a
 						href="./NoticeList.no?data-target=transparency">투명경영</a>
 				</div>
@@ -232,7 +235,7 @@ NoticeBean before = (NoticeBean) request.getAttribute("noticeBefore");
 				<span class="hover:text-blue-600 cursor-pointer px-8 font-medium">후원하기</span>
 				<div
 					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
-					<a href="#">후원하기</a> <a href="#">후원기업/단체</a>
+					<a href="./DonationList.do?data-target=donation">후원하기</a> <a href="./DonationList.do?data-target=company">후원기업/단체</a>
 				</div>
 			</div>
 			<div class="dropdown relative">
@@ -245,7 +248,7 @@ NoticeBean before = (NoticeBean) request.getAttribute("noticeBefore");
 		</div>
 		<!-- 후원하기 버튼 -->
 		<div class="flex items-center">
-			<button
+			<button onclick="location.href='./DonationList.do?data-target=donation';"
 				class="donation-btn bg-yellow-400 text-2xl font-bold h-full w-80 pl-0 mr-0">후원하기</button>
 		</div>
 	</div>
@@ -266,7 +269,7 @@ NoticeBean before = (NoticeBean) request.getAttribute("noticeBefore");
 				<a href="./JoyStoryList.jo?data-target=joyStory"
 					class="tab active-tab block py-4 px-20 text-2xl font-medium text-center flex-1"
 					data-target="joyStory">JOY스토리</a> <a
-					href="./NoticeList.no?data-target=pressRelease"
+					href="./NewsList.ne?data-target=pressRelease"
 					class="tab inactive-tab block py-4 px-20 text-2xl font-medium text-center flex-1"
 					data-target="pressRelease">언론보도</a> <a
 					href="./NoticeList.no?data-target=notices"
@@ -287,12 +290,12 @@ NoticeBean before = (NoticeBean) request.getAttribute("noticeBefore");
 					공지사항&nbsp;&nbsp;조회수
 					<%=notice.getRead_count()%></div>
 				<div class="border-b border-gray-300 mb-6"></div>
-				<div class="content font-light mb-6 text-lg"><%=notice.getContent()%></div>
+				<div class="content font-light mb-6 text-lg"><%=notice.getContent().replace("\n", "<br>")%></div>
 				
 					<%
 					if (!(notice.getFile_name() == null)) {
 					%>
-				<div class="mb-20 bg-[#F7F7F7] p-6">
+				<div class="mb-12 mt-16 bg-[#F7F7F7] p-6">
 					<a href="./upload/<%=notice.getFile_name()%>"
 						class="font-light text-lg text-[#1D5EA4]"> <%=notice.getFile_name()%>
 					</a>
@@ -315,9 +318,16 @@ NoticeBean before = (NoticeBean) request.getAttribute("noticeBefore");
 				}
 				%>
 				<div class="border-b border-gray-300 mb-3"></div>
-				<!-- 목록 버튼 -->
-				<a href="./NoticeList.no?data-target=notices" class="button"> 목록
-				</a>
+				<div class="flex items-center justify-between">
+					<!-- 목록 버튼 -->
+					<a href="./NoticeList.no?data-target=notices" class="button"> 목록
+					</a>
+					<%if(admin){ %>
+					<!-- 공지사항 삭제 버튼 -->
+					<a href="./NoticeDelete.no?num=<%=notice.getNotice_id() %>" class="button"> 삭제하기
+					</a>
+					<%} %>
+				</div>
 			</div>
 		</div>
 	</div>

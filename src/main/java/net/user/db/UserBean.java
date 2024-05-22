@@ -5,6 +5,7 @@ public class UserBean {
     private String email;
     private String password;
     private String name;
+    private boolean admin;
 
     // Getters and Setters
     public int getUser_id() {
@@ -38,5 +39,13 @@ public class UserBean {
     public void setName(String name) {
         this.name = name;
     }
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
 }
 

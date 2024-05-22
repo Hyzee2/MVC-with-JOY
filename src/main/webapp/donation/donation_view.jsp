@@ -1,15 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
-<%@ page import="net.joystory.db.*"%>
-<%
-JoyStoryBean joystory = (JoyStoryBean) request.getAttribute("joydata");
-JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
-%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
-<title><%=joystory.getTitle()%></title>
+<title>청소년행복재단</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -17,7 +12,7 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
             const sections = document.querySelectorAll('.tab-content');
 
             const urlParams = new URLSearchParams(window.location.search);
-            const target = urlParams.get('data-target') || 'joyStory'; // 기본값을 'joyStory'로 설정
+            const target = urlParams.get('data-target') || 'donation'; // 기본값을 'donation'로 설정
 
             // 초기 탭 및 컨텐츠 설정
             tabs.forEach(tab => {
@@ -132,6 +127,7 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
 .donation-btn:hover {
 	background-color: #1d5ea4;
 	color: white;
+	transition: background-color 0.3s, color 0.3s;
 }
 
 .inactive-tab {
@@ -150,48 +146,19 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
 	color: black;
 }
 
-.title {
-	font-size: 20px;
-	font-weight: bold;
+.slide {
+	position: absolute;
+	width: 100%;
+	height: 750px;
+	opacity: 0;
+	transition: opacity 1s ease-in-out;
 }
 
-.content {
-	font-size: 16px;
-}
-
-.previous-title {
-	font-size: 14px;
-}
-
-.previous-title:hover {
-	font-size: 14px;
-	background-color: #F7F7F7;
-	padding: 8px;
-	transition: background-color 0.3s, color 0.3s;
-}
-
-.button {
-	width: 120px;
-	height: 35px;
-	background-color: #FFD700;
-	color: black;
-	font-size: 14px;
-	font-weight: bold;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	text-decoration: none;
-}
-
-.button:hover {
-	background-color: #1d5ea4;
-	color: white;
-	transition: background-color 0.3s, color 0.3s;
-	
+.slide-active {
+	opacity: 1;
 }
 </style>
 </head>
-
 <body class="font-normal">
 	<!-- 헤더 -->
 	<div class="bg-white h-24 flex justify-between pl-10 sticky-top z-50">
@@ -217,7 +184,7 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
 				<div
 					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
 					<a href="./JoyStoryList.jo?data-target=joyStory">JOY스토리</a> <a
-						href="./NewsList.ne?data-target=pressRelease">언론보도</a> <a
+						href="./NoticeList.no?data-target=pressRelease">언론보도</a> <a
 						href="./NoticeList.no?data-target=notices">공지사항</a> <a
 						href="./NoticeList.no?data-target=transparency">투명경영</a>
 				</div>
@@ -233,7 +200,8 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
 				<span class="hover:text-blue-600 cursor-pointer px-8 font-medium">후원하기</span>
 				<div
 					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
-					<a href="./DonationList.do?data-target=donation">후원하기</a> <a href="./DonationList.do?data-target=company">후원기업/단체</a>
+					<a href="./DonationList.do?data-target=donation">후원하기</a> <a
+						href="./DonationList.do?data-target=company">후원기업/단체</a>
 				</div>
 			</div>
 			<div class="dropdown relative">
@@ -251,12 +219,12 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
 		</div>
 	</div>
 
-	<!-- 재단소식 섹션 -->
+	<!-- 후원하기 섹션 -->
 	<div class="relative bg-gray-100 h-[353px]">
-		<img src="https://cdn.imweb.me/thumbnail/20230214/e2422eb268bb6.png"
-			alt="재단 소식 이미지" class="w-full h-full object-cover">
+		<img src="https://cdn.imweb.me/thumbnail/20230214/585ab330ad747.png"
+			alt="후원하기" class="w-full h-full object-cover">
 		<div class="absolute inset-0 flex items-center justify-center">
-			<h1 class="text-6xl font-bold" style="color: #4c8caa;">재단소식</h1>
+			<h1 class="text-6xl font-bold" style="color: #4c8caa;">후원하기</h1>
 		</div>
 	</div>
 
@@ -264,56 +232,102 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
 	<div class="bg-white">
 		<div class="container mx-auto flex justify-center items-center">
 			<div class="flex justify-between items-center w-full max-w-7xl">
-				<a href="./JoyStoryList.jo?data-target=joyStory"
+				<a href="./DonationList.do?data-target=donation"
 					class="tab active-tab block py-4 px-20 text-2xl font-medium text-center flex-1"
-					data-target="joyStory">JOY스토리</a> <a
-					href="./NewsList.ne?data-target=pressRelease"
+					data-target="donation">후원하기</a> <a
+					href="./DonationList.do?data-target=company"
 					class="tab inactive-tab block py-4 px-20 text-2xl font-medium text-center flex-1"
-					data-target="pressRelease">언론보도</a> <a
-					href="./NoticeList.no?data-target=notices"
-					class="tab inactive-tab block py-4 px-20 text-2xl font-medium text-center flex-1"
-					data-target="notices">공지사항</a> <a href="./NoticeList.no?data-target=transparency"
-					class="tab inactive-tab block py-4 px-20 text-2xl font-medium text-center flex-1"
-					data-target="transparency">투명경영</a>
+					data-target="company">후원기업/단체</a>
 			</div>
 		</div>
 	</div>
-	<div class="container mx-auto mt-10 mb-28 max-w-7xl">
-		<div class="bg-white">
-			<div class="p-8">
-				<h2 class="text-5xl font-bold mb-10">JOY스토리</h2>
 
-				<h1 class="text-2xl font-light title mb-4"><%=joystory.getTitle()%></h1>
-				<div class="text-sm font-light mb-6 text-gray-500">
-					조이스토리&nbsp;&nbsp;
-					<%=joystory.getPost_date()%></div>
-				<div class="border-b border-gray-300 mb-6"></div>
-				<img src="<%=joystory.getImage_url()%>" alt="<%=joystory.getTitle()%>"
-										class="w-full h-full object-cover mb-4">
-				<div class="content font-light mb-6 text-lg"><%=joystory.getDescription()%></div>
-					
-				</div>
-				<!-- 이전 Joy 스토리 -->
-				<%
-				if (before.getTitle() != null) {
-				%>
-				<a href="./JoyDetailAction.jo?data-target=joyStory&num=<%=before.getStory_id()%>"
-					class="font-light text-base">
-					<div class="previous-title p-2">
-						<span class="text-gray-400 font-light text-lg">∨</span>&nbsp;&nbsp;&nbsp;
-						<span class="font-light text-lg"><%=before.getTitle()%></span>
+	<!-- 컨텐츠 섹션 -->
+
+	<div id="donation" class="tab-content">
+		<div class="container mx-auto mt-10 mb-4 max-w-7xl">
+			<div class="bg-white">
+				<div class="p-8">
+					<h2 class="text-5xl font-bold mb-4">후원하기</h2>
+					<div id="trust-section" class="py-16 mt-4">
+						<div class="container mx-auto text-center">
+							<h2 class="text-5xl font-normal mb-4" style="color: #363636;">
+								어려움에 처한 청소년들이 스스로 행복을 찾아갈 수 있도록</h2>
+							<h2 class="text-5xl font-normal mb-16" style="color: #363636;">
+								함께하는 <span class="font-bold">청소년행복재단</span> 입니다.
+							</h2>
+							<div
+								class="flex justify-center space-x-8 border border-[#d7d7d7]">
+								<div class="w-full h-full">
+									<img
+										src="https://cdn.imweb.me/thumbnail/20230220/ca4d8b256d108.png"
+										alt="후원하기" />
+								</div>
+								<div class="w-full h-full text-[#363636]">
+									<h2 class="text-5xl font-normal my-12 mx-3 text-left">후원자님께
+										약속 드립니다.</h2>
+									<h4 class="text-xl mb-8 mx-3 text-left">
+										청소년행복재단은 후원자님께서 보내주시는 후원금을 어려운 청소년들을 위해 단 한푼도 소중하게 잘 사용하겠습니다.<br>헛되이
+										쓰이거나 낭비되지 않도록 각별히 노력하겠습니다.<br>더불어 후원자님께서 보내주신 후원금을 어떻게
+										사용하고 있는지 상세한 내역을 알려드리도록 하겠습니다.
+									</h4>
+									<h4 class="text-xl mb-8 mx-3 text-left">
+										후원문의: 02)6284-0061<br>후원계좌: 우리은행
+										1006-101-528927(예금주:청소년행복재단)
+									</h4>
+									<div class="flex justify-center space-x-7">
+										<a href="./DonationForm.do" target="_blank"
+											class="mt-4 bg-[#ffcb05] text-black text-xl font-bold w-60 h-24 flex items-center justify-center rounded"> 후원신청하기 </a> 
+										<a href="./ReceiptList.do" target="_blank"
+											class="mt-4 bg-white text-black text-xl font-bold border border-black w-60 h-24 flex items-center justify-center rounded"> 기부금영수증 발급 </a>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-				</a>
-				<%
-				}
-				%>
-				<div class="border-b border-gray-300 mb-3"></div>
-				<!-- 목록 버튼 -->
-				<a href="./JoyStoryList.jo?data-target=joyStory" class="button"> 목록
-				</a>
+				</div>
+			</div>
+		</div>
+		<!-- 배경 이미지 섹션 -->
+		<div class="h-[694px] mb-28"
+			style="background-image: url('https://cdn.imweb.me/thumbnail/20230124/d2369a4e4e516.png');">
+			<div class="flex items-center justify-center">
+				<div class="mx-auto text-center p-16">
+					<h2 class="text-5xl font-bold my-12 text-[#363636]">(재)청소년행복재단의
+						후원자가 되시면</h2>
+					<div class="flex justify-center space-x-[640px]">
+						<!-- 첫 번째 박스 -->
+						<div class="rounded-lg pt-8 text-center">
+							<img
+								src="https://cdn.imweb.me/upload/S202210292f0566e82db02/a3ae4e70a9423.png"
+								alt="정기소식/각종행사 초청" class="mx-auto mb-4">
+						</div>
+						<!-- 두 번째 박스 -->
+						<div class="rounded-lg pt-8 text-center">
+							<img
+								src="https://cdn.imweb.me/upload/S202210292f0566e82db02/d036022054d9e.png"
+								alt="기부금영수증" class="mx-auto mb-4">
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
+
+	<div id="company" class="tab-content hidden">
+		<div class="container mx-auto mt-10 mb-4 max-w-7xl">
+			<div class="bg-white">
+				<div class="p-8">
+					<h2 class="text-5xl font-bold mb-6">후원기업/단체</h2>
+					<h3 class="font-normal text-4xl text-blue-500">함께하는 후원기업</h3>
+					<p>여기에 언론보도 컨텐츠가 표시됩니다.</p>
+					<h3 class="font-normal text-4xl text-blue-500">법률/의료지원 등</h3>
+					<p>여기에 언론보도 컨텐츠가 표시됩니다.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	<!-- Footer 섹션 -->
 	<footer class="bg-[#323a44] text-white mt-20">
@@ -324,11 +338,11 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
 					<div class="flex space-x-32">
 						<a href="https://www.facebook.com/withjoy.or.kr" target="_blank"><img
 							src="https://cdn.imweb.me/thumbnail/20221112/6d60316f81d9d.png"
-							alt="Facebook" class="w-12 h-12"></a> <a href="https://blog.naver.com/withjoy0191"
-							target="_blank"><img
+							alt="Facebook" class="w-12 h-12"></a> <a
+							href="https://blog.naver.com/withjoy0191" target="_blank"><img
 							src="https://cdn.imweb.me/thumbnail/20221112/480f360f445a6.png"
-							alt="Naver Blog" class="w-12 h-12"></a> <a href="https://pf.kakao.com/_meRRxb"
-							target="_blank"><img
+							alt="Naver Blog" class="w-12 h-12"></a> <a
+							href="https://pf.kakao.com/_meRRxb" target="_blank"><img
 							src="https://cdn.imweb.me/thumbnail/20230208/c69f295ef4d64.png"
 							alt="Kakao Channel" class="w-12 h-12"></a>
 					</div>
@@ -374,6 +388,5 @@ JoyStoryBean before = (JoyStoryBean) request.getAttribute("joyBefore");
 		<div
 			class="border-t-4 border-gray-600 pt-8 max-w-7xl container mx-auto"></div>
 	</footer>
-
 </body>
 </html>

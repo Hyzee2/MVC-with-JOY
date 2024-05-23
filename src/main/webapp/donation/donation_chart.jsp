@@ -1,12 +1,51 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+<%@ page import="java.util.HashMap"%>
+<%@ page import="java.util.Map"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
-<title>기부금영수증</title>
+<title>관리자페이지</title>
 <link rel="icon" type="image/png" href="./main/tab-logo.png">
+<script src="https://www.gstatic.com/charts/loader.js">
+</script>
 <script src="https://cdn.tailwindcss.com"></script>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		google.charts.load('current',{packages:['corechart']});
+		google.charts.setOnLoadCallback(drawChart);
+		
+		function drawChart() {
+
+			const data = google.visualization.arrayToDataTable([
+				['후원 항목', '총 후원금'],
+			  <% 
+			  HashMap<String, Integer> dataMap = (HashMap<String, Integer>) request.getAttribute("dataMap");
+			  if (dataMap != null && !dataMap.isEmpty()) {
+	              for (Map.Entry<String, Integer> entry : dataMap.entrySet()) {
+	                  String item = entry.getKey();
+	                  int sum = entry.getValue();
+	                 
+			  %>
+			  ['<%= item %>', <%= sum %>],
+			  <%
+              		}
+			  }
+			  %>
+			]);
+
+			const options = {
+			  title: '후원 항목별 총 후원금'
+			  
+			};
+
+			const chart = new google.visualization.ColumnChart(document.getElementById('amountChart'));
+			chart.draw(data, options);
+
+		}
+	});
+</script>
 <style>
 .checked-amount {
 	background-color: #262728;
@@ -53,7 +92,7 @@
 }
 </style>
 </head>
-<body class="font-normal">
+<body>
 	<!-- 헤더 -->
 	<div class="bg-white h-24 flex justify-between pl-10 sticky-top z-50">
 		<!-- 로고 -->
@@ -65,34 +104,16 @@
 		</div>
 	</div>
 
-	<div class="flex items-center justify-center min-h-[520px]">
-		<div class="w-full max-w-lg mx-auto">
-			<form action="./ReceiptAction.do" method="post"
-				class="bg-white p-8">
-				<div class="mb-6">
-					<input type="email" name="email" placeholder="이메일을 입력하세요."
-						class="w-full py-3 px-4 border-b border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-600 placeholder-gray-400"
-						required>
+	<!-- 컨텐츠 섹션 -->
+	<div class="container mx-auto mt-10 mb-28 max-w-7xl min-h-[520px]">
+		<div class="tab-content">
+			<div class="bg-white">
+				<div class="p-8">
+					<h2 class="text-5xl font-bold mb-10">후원금 현황</h2>
+					<div id="amountChart" style="max-width: 900px; height: 500px"></div>
+					<div id="userChart" style="max-width: 900px; height: 500px"></div>
 				</div>
-				<div class="mb-6">
-					<input type="password" name="password" placeholder="비밀번호를 입력하세요."
-						class="w-full py-3 px-4 border-b border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-600 placeholder-gray-400"
-						required>
-				</div>
-				<div class="mb-6 mt-12">
-					<button type="submit"
-						class="w-full py-4 bg-[#262728] text-white font-bold rounded">로그인</button>
-				</div>
-				<div class="text-center text-gray-500">
-					<div class="flex justify-between">
-						<a href="#" class="text-sm">회원가입</a>
-						<div>
-							<a href="#" class="text-sm">아이디찾기</a> | <a
-								href="#" class="text-sm">비밀번호찾기</a>
-						</div>
-					</div>
-				</div>
-			</form>
+			</div>
 		</div>
 	</div>
 

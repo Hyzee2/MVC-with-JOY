@@ -5,6 +5,7 @@
 <head>
 <meta charset="utf-8">
 <title>청소년행복재단</title>
+<link rel="icon" type="image/png" href="./main/tab-logo.png">
 </head>
 <body>
 <%

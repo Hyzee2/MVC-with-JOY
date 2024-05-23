@@ -10,6 +10,7 @@ NewsBean before = (NewsBean) request.getAttribute("newsBefore");
 <head>
 <meta charset="utf-8">
 <title><%=news.getTitle()%></title>
+<link rel="icon" type="image/png" href="./main/tab-logo.png">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
         document.addEventListener('DOMContentLoaded', function () {

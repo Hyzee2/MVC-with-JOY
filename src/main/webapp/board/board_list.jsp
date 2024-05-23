@@ -17,7 +17,7 @@ boolean admin = isAdmin != null && isAdmin;
 <head>
 <meta charset="utf-8">
 <title>청소년행복재단</title>
-</head>
+<link rel="icon" type="image/png" href="./main/tab-logo.png">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -178,7 +178,6 @@ boolean admin = isAdmin != null && isAdmin;
 }
 </style>
 </head>
-
 <body class="font-normal">
 	<!-- 헤더 -->
 	<div class="bg-white h-24 flex justify-between pl-10 sticky-top z-50">

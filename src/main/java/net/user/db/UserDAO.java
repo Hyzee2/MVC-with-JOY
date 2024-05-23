@@ -10,6 +10,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import net.notice.db.NoticeBean;
+
 public class UserDAO {
 	static Connection conn;
 	PreparedStatement pstmt;
@@ -102,7 +104,7 @@ public class UserDAO {
 //						return 0; // 관리자
 //					}
 					if (rs.getString("email").equals(email) && rs.getString("password").equals(password)) {
-						if(rs.getBoolean("admin")) {
+						if (rs.getBoolean("admin")) {
 							return 0; // 관리자
 						}
 						return 1; // 회원
@@ -126,6 +128,38 @@ public class UserDAO {
 		}
 		return -1;// 비회원
 
+	}
+
+	public String getName(String email) {
+		String sql = "SELECT name FROM Users where email=?";
+		String username = "";
+		try {
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, email);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				username = rs.getString("name");
+			}
+			return username;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException ex) {
+				}
+		}
+
+		return null;// 비회원
 	}
 
 	public static Connection getConnection() {

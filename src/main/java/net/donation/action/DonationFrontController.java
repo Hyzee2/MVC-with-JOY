@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.notice.action.NoticeDetailAction;
+
 
 /**
  * Servlet implementation class NoticeFrontController
@@ -73,6 +75,34 @@ public class DonationFrontController extends HttpServlet {
 			forward = new ActionForward();
 			forward.setRedirect(false);
 			forward.setPath("./donation/receipt_login.jsp");
+		}else if (command.equals("/DonationAction.do")) { // 후원하기 폼 작성 후, 데이터 insert하는 작업  
+			action = new DonationAction(); 
+			try {
+				forward = action.execute(request, response);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else if (command.equals("/ReceiptAction.do")) { // 기부금 영수증 로그인 email, pw 확인
+			action = new ReceiptAction(); 
+			try {
+				forward = action.execute(request, response);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else if (command.equals("/DonationDetailAction.do")) {
+			action = new DonationDetailAction();
+			try {
+				forward = action.execute(request, response);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else if (command.equals("/DonationView.do")) {
+			action = new ShowChartAction(); 
+			try {
+				forward = action.execute(request, response);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		

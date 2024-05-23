@@ -1,12 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
-<% String email = (String)session.getAttribute("email"); %>
+<%
+String email = (String) session.getAttribute("email");
+Boolean isAdmin = (Boolean) session.getAttribute("admin");
+boolean admin = isAdmin != null && isAdmin;
+%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <title>청소년행복재단</title>
-
+<link rel="icon" type="image/png" href="./main/tab-logo.png">
 <script src="https://cdn.tailwindcss.com"></script>
 
 <script>
@@ -85,7 +89,8 @@
       statBoxes.forEach(box => {
         statObserver.observe(box);
       });
-
+	
+      // 로그인 모달 
       const openLoginModal = document.getElementById('openLoginModal');
       const modal = document.getElementById('loginModal');
       const closeBtn = document.getElementById('closeModal');
@@ -107,6 +112,7 @@
         }
       }
 
+      // 회원가입 모달 
       const openSignupModal = document.getElementById('openSignupModal');
       const signupModal = document.getElementById('signupModal');
       const closeSignupModal = document.getElementById('closeSignupModal');
@@ -127,6 +133,15 @@
           signupModal.style.zIndex = '1';
         }
       }
+      
+   	  // 로그인 모달에서 '회원가입' 클릭 시 로그인 모달 닫기 및 회원가입 모달 열기
+      const switchToSignupLink = document.getElementById('switchToSignup');
+      switchToSignupLink.addEventListener('click', function (e) {
+          e.preventDefault();
+          modal.style.display = 'none';
+          signupModal.style.display = 'flex';
+          signupModal.style.zIndex = '1000';
+      });
       
    	  // 회원가입 시 비밀번호 유효성 검사 추가
       const signupForm = document.getElementById('signupForm');
@@ -326,12 +341,20 @@ body {
 	<!-- 상단 바 -->
 	<div
 		class="font-light bg-gray-100 h-11 relative flex justify-end items-center pr-10 space-x-4 sticky-top">
-		<button class="main-color text-white w-32 h-11 text-sm" onclick="window.open('./ReceiptLogin.do', '_blank');">기부금영수증</button>
-		<%if(email == null){ %>
+		<button class="main-color text-white w-32 h-11 text-sm"
+			onclick="window.open('./ReceiptLogin.do', '_blank');">기부금영수증</button>
+		<%
+		if (email == null) {
+		%>
 		<button id="openLoginModal" class="text-gray-600 text-sm">로그인</button>
-		<%}else{ %>
-		<button id="logoutBtn" class="text-gray-600 text-sm" onclick="location.href='./LogoutAction.lo'">로그아웃</button>
-		<%} %>
+		<%
+		} else {
+		%>
+		<button id="logoutBtn" class="text-gray-600 text-sm"
+			onclick="location.href='./LogoutAction.lo'">로그아웃</button>
+		<%
+		}
+		%>
 		<div class="text-gray-300">|</div>
 		<button id="openSignupModal" class="text-gray-600 text-sm">회원가입</button>
 	</div>
@@ -360,8 +383,8 @@ body {
 					class="login-button w-full py-2 rounded font-normal">로그인</button>
 			</form>
 			<div class="mt-4 mb-5 flex justify-between">
-				<a href="#" class="text-gray-700 font-light">회원가입</a> <a href="#"
-					class="text-gray-700 font-light">아이디・비밀번호 찾기</a>
+				<a href="#" id="switchToSignup" class="text-gray-700 font-light">회원가입</a>
+				<a href="#" class="text-gray-700 font-light">아이디・비밀번호 찾기</a>
 			</div>
 		</div>
 	</div>
@@ -440,7 +463,8 @@ body {
 				<span class="hover:text-blue-600 cursor-pointer px-8 font-medium">후원하기</span>
 				<div
 					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
-					<a href="./DonationList.do?data-target=donation">후원하기</a> <a href="./DonationList.do?data-target=company">후원기업/단체</a>
+					<a href="./DonationList.do?data-target=donation">후원하기</a> <a
+						href="./DonationList.do?data-target=company">후원기업/단체</a>
 				</div>
 			</div>
 			<div class="dropdown relative">
@@ -450,10 +474,20 @@ body {
 					<a href="#">진행중인 캠페인</a> <a href="#">지난 캠페인</a>
 				</div>
 			</div>
+			<%if(admin){ %>
+			<div class="dropdown relative">
+				<span class="hover:text-blue-600 cursor-pointer px-8 font-medium">관리자</span>
+				<div
+					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
+					<a href="./DonationView.do">후원금 현황</a> <a href="#">회원관리</a>
+				</div>
+			</div>
+			<%} %>
 		</div>
 		<!-- 후원하기 버튼 -->
 		<div class="flex items-center">
-			<button onclick="location.href='./DonationList.do?data-target=donation';"
+			<button
+				onclick="location.href='./DonationList.do?data-target=donation';"
 				class="donation-btn bg-yellow-400 text-2xl font-bold h-full w-80 pl-0 mr-0">후원하기</button>
 		</div>
 	</div>
@@ -568,7 +602,7 @@ body {
 			<a href="./JoyStoryList.jo?data-target=joyStory"
 				class="font-light text-grey-600 text-right">더보기</a>
 			<h2 class="font-normal text-3xl">언론보도</h2>
-			<a href="../board/notice.jsp?data-target=pressRelease"
+			<a href="./NewsList.ne?data-target=pressRelease"
 				class="font-light text-grey-600 text-right">더보기</a>
 		</div>
 		<div class="mt-5 grid grid-cols-2 gap-10">

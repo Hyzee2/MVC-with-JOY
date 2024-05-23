@@ -7,7 +7,10 @@ public class DonationBean {
 	private int user_id;
 	private String item;
 	private int amount;
-	private Date payment_date;
+	private String payment_date;
+	private String bank_name;
+	private String account_number;
+	private Date start_date;
 	
 	public int getDonation_id() {
 		return donation_id;
@@ -33,11 +36,29 @@ public class DonationBean {
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-	public Date getPayment_date() {
+	public String getPayment_date() {
 		return payment_date;
 	}
-	public void setPayment_date(Date payment_date) {
+	public void setPayment_date(String payment_date) {
 		this.payment_date = payment_date;
+	}
+	public String getBank_name() {
+		return bank_name;
+	}
+	public void setBank_name(String bank_name) {
+		this.bank_name = bank_name;
+	}
+	public String getAccount_number() {
+		return account_number;
+	}
+	public void setAccount_number(String account_number) {
+		this.account_number = account_number;
+	}
+	public Date getStart_date() {
+		return start_date;
+	}
+	public void setStart_date(Date start_date) {
+		this.start_date = start_date;
 	}
 
 }

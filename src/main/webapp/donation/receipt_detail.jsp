@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ page import="net.donation.db.*"%>
+<%@ page import="java.util.*"%>
 <%
-DonationBean donation = (DonationBean) request.getAttribute("donationdata");
-DonationBean before = (DonationBean) request.getAttribute("donationBefore");
-String email = (String)session.getAttribute("email");
+HashMap<DonationBean, String> donationdata = (HashMap<DonationBean, String>) request.getAttribute("donationdata");
+HashMap<DonationBean, String> donationBefore = (HashMap<DonationBean, String>) request.getAttribute("donationBefore");
+String email = (String) session.getAttribute("email");
 %>
 <!DOCTYPE html>
 <html>
@@ -125,31 +126,46 @@ String email = (String)session.getAttribute("email");
 		<div class="bg-white">
 			<div class="p-8">
 				<h2 class="text-5xl font-bold mb-10">기부금영수증</h2>
+				<%
+				for (Map.Entry<DonationBean, String> entry : donationdata.entrySet()) {
+					DonationBean donation = entry.getKey();
+					String amount = entry.getValue();
+				%>
 
-				<h1 class="text-2xl font-light title mb-4"><%=donation.getItem()%>&nbsp;기부금 영수증 상세내역</h1>
+				<h1 class="text-2xl font-light title mb-4"><%=donation.getItem()%>&nbsp;기부금
+					영수증 상세내역
+				</h1>
 				<div class="text-sm font-light mb-6 text-gray-500">
-					기부금영수증&nbsp;&nbsp;
-				</div>
+					기부금영수증&nbsp;&nbsp;</div>
 				<div class="border-b border-gray-300 mb-6"></div>
 				<div class="content font-light mb-6 text-lg">
-					후원 신청일자:&nbsp;&nbsp; <%=donation.getStart_date()%>
+					후원 신청일자:&nbsp;&nbsp;
+					<%=donation.getStart_date()%>
 				</div>
 				<div class="content font-light mb-6 text-lg">
-					후원 출금일:&nbsp;&nbsp; <%=donation.getPayment_date()%>
+					후원 출금일:&nbsp;&nbsp;
+					<%=donation.getPayment_date()%>
 				</div>
 				<div class="content font-light mb-6 text-lg">
-					후원 금액:&nbsp;&nbsp; <%=donation.getAmount()%> 원
+					후원 금액:&nbsp;&nbsp;
+					<%=amount%>
+					원
 				</div>
 				<div class="content font-light mb-6 text-lg">
-					출금 은행:&nbsp;&nbsp; <%=donation.getBank_name()%>
+					출금 은행:&nbsp;&nbsp;
+					<%=donation.getBank_name()%>
 				</div>
 				<div class="content font-light mb-6 text-lg">
-					출금 계좌:&nbsp;&nbsp; <%=donation.getAccount_number()%>
+					출금 계좌:&nbsp;&nbsp;
+					<%=donation.getAccount_number()%>
 				</div>
-
-				<!-- 이전 공지사항 -->
+				<%} %>
 				<%
-				if (before != null) {
+				
+				for (Map.Entry<DonationBean, String> entryBefore : donationBefore.entrySet()) {
+					DonationBean before = entryBefore.getKey();
+				
+					if (before != null) {
 				%>
 				<a
 					href="./DonationDetailAction.do?&num=<%=before.getDonation_id()%>"
@@ -161,12 +177,14 @@ String email = (String)session.getAttribute("email");
 					</div>
 				</a>
 				<%
+				
+					}
 				}
 				%>
 				<div class="border-b border-gray-300 mb-3"></div>
 				<div class="flex items-center justify-between">
 					<!-- 목록 버튼 -->
-					<a href="./ReceiptList.do?email="<%=email %> class="button">
+					<a href="./ReceiptList.do?email=" <%=email%> class="button">
 						목록 </a>
 				</div>
 			</div>

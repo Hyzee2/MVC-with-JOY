@@ -83,7 +83,15 @@ public class LoginFrontController extends HttpServlet {
 			forward = new ActionForward();
 			forward.setRedirect(false);
 			forward.setPath("./main/logout.jsp");
+		}else if (command.equals("/UserList.lo")) { // 관리자의 회원 목록 조회 
+			action = new userListAction();
+			try {
+				forward = action.execute(request, response);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+		
 
 		if (forward.isRedirect()) { // forward라는 변수 안에 isRedirect가 담겨있으므로 true이면 redirect방식, false이면 forward 방식
 			response.sendRedirect(forward.getPath()); // url변경. 이전페이지가 갖고있던 권한은 사라짐

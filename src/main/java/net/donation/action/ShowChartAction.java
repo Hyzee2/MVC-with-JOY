@@ -13,22 +13,32 @@ public class ShowChartAction implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		request.setCharacterEncoding("utf-8");
-		
+
+		// 막대그래프
 		HashMap<String, Integer> dataMap = new HashMap<String, Integer>();
-		
+
 		DonationDAO donationdao = new DonationDAO();
-		
+
 		dataMap = donationdao.getData();
 		System.out.println(dataMap.toString());
-		
+
 		request.setAttribute("dataMap", dataMap);
-		
+
+		// 원형 그래프
+		HashMap<String, Integer> pieMap = new HashMap<String, Integer>();
+
+		DonationDAO piedao = new DonationDAO();
+
+		pieMap = piedao.getUserData();
+		System.out.println(pieMap.toString());
+
+		request.setAttribute("pieMap", pieMap);
+
 		ActionForward forward = new ActionForward();
 		forward.setRedirect(false);
-		forward.setPath("./donation/donation_chart.jsp"); 
+		forward.setPath("./admin/donation_chart.jsp");
 		return forward;
-			
-		
+
 	}
 
 }

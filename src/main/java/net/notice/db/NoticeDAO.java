@@ -173,6 +173,38 @@ public class NoticeDAO {
 		return null;
 	}
 
+	// 이전 공지사항 글번호 받아오기
+	public int getBeforeNum(int num) throws Exception { // 게시글 번호를 매개변수로 받는다
+		int beforeNum = 0;
+
+		try {
+			pstmt = conn.prepareStatement("select notice_id from Notices where notice_id = (select max(notice_id) as num from Notices where notice_id < ?)");
+			pstmt.setInt(1, num);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				beforeNum = rs.getInt("notice_id");
+				
+			}
+			return beforeNum;
+		} catch (Exception ex) {
+			System.out.println("getBeforeNum 실패 : " + ex);
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException ex) {
+				}
+		}
+		return 0;
+	}
+
 	// 공지사항 삭제
 	public boolean noticeDelete(int num) {
 
@@ -186,8 +218,8 @@ public class NoticeDAO {
 			result = pstmt.executeUpdate();
 			if (result == 0) {
 				return false;
-			}else {
-			return true;
+			} else {
+				return true;
 			}
 		} catch (Exception ex) {
 			System.out.println("noticeDelete 실패 : " + ex);

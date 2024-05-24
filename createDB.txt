@@ -1,0 +1,137 @@
+USE mydb;
+
+-- Users 테이블 생성
+CREATE TABLE Users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    admin boolean
+);
+
+select * from Users;
+
+insert into Users (email, password, name, admin) values ('admin@naver.com', '1234', '관리자', true);  
+
+-- Campaigns 테이블 생성
+CREATE TABLE Campaigns (
+    campaign_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    start_date DATE,
+    end_date DATE,
+    status ENUM('ongoing', 'finished') NOT NULL
+);
+
+-- Donations 테이블 생성
+CREATE TABLE Donations (
+    donation_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    item VARCHAR(255) NOT NULL,
+    amount INT NOT NULL,
+    payment_date ENUM('5일', '15일', '25일') NOT NULL,
+    bank_name VARCHAR(255),
+    account_number VARCHAR(255),
+    start_date DATE,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+select * from Donations;
+
+select Users.user_id, email, name, total_donation from (select user_id, sum(amount) as total_donation from Donations group by user_id) as a right join Users on Users.user_id = a.user_id;
+select user_id, sum(amount) as '총 후원금' from Donations group by user_id;
+
+select item as '후원 항목', sum(amount) as '총 후원금' from Donations group by item;
+select item as '후원 항목', count(user_id) as '후원 회원 수' from Donations group by item;
+
+-- JoyStories 테이블 생성
+CREATE TABLE JoyStories (
+    story_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    image_url VARCHAR(255),
+    description TEXT,
+    post_date DATE NOT NULL
+);
+
+INSERT INTO JoyStories (title, image_url, description, post_date) VALUES
+('청소년과 함께하는 꽃 심기 행사 진행', 'https://cdn.imweb.me/thumbnail/20240518/80baeb89042a9.jpg', '청소년들과 함께 즐거운 꽃 심기 행사를 진행했습니다. 많은 청소년들이 참여해 꽃을 심으며 자연과 교감할 수 있는 시간을 가졌습니다.', '2024-05-18'),
+('4월 김현채 검사님 만남', 'https://cdn.imweb.me/thumbnail/20240509/15860e27f8d4a.png', '4월에는 김현채 검사님과의 만남이 있었습니다. 청소년들은 법에 대한 궁금증을 해소하고, 검사님의 조언을 들을 수 있는 유익한 시간을 보냈습니다.', '2024-04-09'),
+('2024년 제 1회 "행복한 산악회" 진행', 'https://cdn.imweb.me/thumbnail/20240518/2b9f447c35a39.jpg', '2024년 제 1회 행복한 산악회가 진행되었습니다. 청소년들과 함께 산을 오르며 건강한 시간을 보냈습니다.', '2024-05-18'),
+('3월 김현재 검사님 만남', 'https://cdn.imweb.me/thumbnail/20240521/ed4e8fe7c4066.jpg', '3월에는 김현재 검사님과의 만남이 있었습니다. 청소년들은 법에 대한 깊은 이해를 할 수 있는 기회를 가졌습니다.', '2024-03-21'),
+('대학 입시&재학 장학생 생활장학금 전달', 'https://cdn.imweb.me/thumbnail/20240521/2de21ced51969.jpg', '대학 입시와 재학 중인 장학생들에게 생활장학금을 전달하는 행사를 가졌습니다. 많은 학생들이 혜택을 받았습니다.', '2024-05-21'),
+('2월 김현채 검사님 만남', 'https://cdn.imweb.me/thumbnail/20240521/3c4c06dc976c5.jpg', '2월에는 김현채 검사님과의 만남이 있었습니다. 청소년들은 법률 상담을 받고 다양한 법적 지식을 배울 수 있었습니다.', '2024-02-21'),
+('2024년 행복한 겨울여행', 'https://cdn.imweb.me/thumbnail/20240521/1a05c0078c014.jpg', '2024년 겨울에는 청소년들과 함께 행복한 겨울여행을 다녀왔습니다. 많은 추억을 쌓을 수 있는 시간이었습니다.', '2024-01-15'),
+('11월 김현채 검사님 만남', 'https://cdn.imweb.me/thumbnail/20231201/1d3a15b8390cf.png', '11월에는 김현채 검사님과의 만남이 있었습니다. 청소년들은 법률 상담과 함께 유익한 시간을 보냈습니다.', '2023-11-30'),
+('청소년과 함께하는 "가을과 놀자"남산 트래킹', 'https://cdn.imweb.me/thumbnail/20231030/8006cc7acd86a.png', '청소년들과 함께 남산에서 "가을과 놀자" 트래킹을 진행했습니다. 많은 청소년들이 참여하여 즐거운 시간을 보냈습니다.', '2023-10-30');
+
+select * from JoyStories;
+
+-- MediaReports 테이블 생성
+CREATE TABLE MediaReports (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    image_url VARCHAR(255),
+    description TEXT,
+    post_date DATE NOT NULL
+);
+
+INSERT INTO MediaReports (title, image_url, description, post_date) VALUES
+('서울가정법원과 청소년행복재단이 함께하는 \'안녕(安寧)! 가족학교\' 운영', 'https://cdn.imweb.me/thumbnail/20240220/f0c61317b39f9.jpg', '서울가정법원과 청소년행복재단이 함께 진행하는 안녕(安寧)! 가족학교 운영 소식입니다.', '2024-02-20'),
+('한일의료기(주), 취약계층청소년에게 전기매트 20개 기부', 'https://cdn.imweb.me/thumbnail/20240103/2af45b8714c43.png', '한일의료기(주)에서 취약계층 청소년들에게 전기매트 20개를 기부하였습니다.', '2024-01-03'),
+('공영홈쇼핑, \'눈꽃 동행축제 온기 나눔 캠페인\' 바자회 수익금 800만원 기부', 'https://cdn.imweb.me/thumbnail/20231223/724475724ebd7.png', '공영홈쇼핑이 눈꽃 동행축제 온기 나눔 캠페인 바자회에서 수익금 800만원을 기부하였습니다.', '2023-12-23'),
+('청소년행복재단-삼영잉크페인트제주식회사, 업무협약 체결 및 사랑의 쌀 기부', 'https://cdn.imweb.me/thumbnail/20231214/31149e2d7199e.png', '청소년행복재단과 삼영잉크페인트제주식회사가 업무협약을 체결하고 사랑의 쌀을 기부하였습니다.', '2023-12-14'),
+('하임 청소년과 김현채 검사의 특별한 만남', 'https://cdn.imweb.me/thumbnail/20231207/da627e6ae6611.png', '하임 청소년과 김현채 검사가 특별한 만남을 가졌습니다.', '2023-12-07'),
+('의왕시 자립준비청소년을 위한 장학금 전달', 'https://cdn.imweb.me/thumbnail/20231207/da627e6ae6611.png', '의왕시에서 자립준비청소년을 위한 장학금을 전달하였습니다.', '2023-12-07');
+
+select * from MediaReports;
+
+CREATE TABLE Notices (
+    notice_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    post_date DATE NOT NULL,
+    file_name VARCHAR(255), 
+    read_count INT
+);
+
+INSERT INTO Notices (title, content, post_date, file_name, read_count) VALUES
+('서울청년센터 광진 오랑(수탁기관 : (재)청소년행복재단) 선임매니저 / 매니저 채용 공고(마감)', 
+'서울청년센터 광진 오랑(수탁기관 : (재)청소년행복재단)에서 지역사회복지사를 함께 만들어갈 열정과 책임감이 투철한 새 가족을 아래와 같이 모집하오니 많은 참여 바랍니다.
+
+□ 근무형태 : 계약직
+
+□ 모집인원 : 3명
+
+□ 자격요건
+1. 응시자격
+- 선임매니저 : 서울청년센터 청사자 자격기준 및 결격기준 (붙임 1) 참조
+- 매니저 : 관련 업무 신입 및 경력자
+
+2. 우대사항
+- 청년인재 (19세~39세)
+- 취업보호대상자 (국가유공자 및 그 자녀, 보훈대상자 및 그 자녀 등)
+- 관련 학위 및 자격증 소지자 (사회복지사, 상담사, 청소년지도사, 평생교육사, 전문상담교사, 세무회계 등)
+- 청년공간 및 청년센터 운영 및 기획 경력자
+- 공공 행정 사업 업무 경력자
+- 프로그램, 콘텐츠 기획 운영, 사업 홍보, 디자인 제작물 작성 가능자
+- 포토샵, 일러스트, Microsoft Office, 아래한글 활용 가능자
+
+□ 준비서류
+- 입사지원서 및 자기소개서 (필수)
+- 개인정보 제공 및 이용, 제3자 제공 동의서 (필수)
+- 경력증명서, 자격증 사본 해당자 (해당자)
+- 취업보호대상자증명서 해당자 (해당자)', 
+'2024-05-18', '채용공고.pdf', 123);
+
+INSERT INTO Notices (title, content, post_date, file_name, read_count) VALUES
+('첫 번째 공지사항', '첫 번째 공지사항의 내용입니다.', '2024-05-01', 'file1.pdf', 100),
+('두 번째 공지사항', '두 번째 공지사항의 내용입니다.', '2024-05-05', 'file2.docx', 150),
+('세 번째 공지사항', '세 번째 공지사항의 내용입니다.', '2024-05-10', NULL, 200),
+('네 번째 공지사항', '네 번째 공지사항의 내용입니다.', '2024-05-15', 'file3.jpg', 250),
+('다섯 번째 공지사항', '다섯 번째 공지사항의 내용입니다.', '2024-05-20', 'file4.png', 300);
+
+
+select notice_id
+from Notices
+where notice_id = (select max(notice_id) as num
+from Notices where notice_id < 6);

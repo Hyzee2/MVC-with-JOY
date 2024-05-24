@@ -4,9 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -35,6 +37,7 @@ public class DonationDAO {
 		}
 	}
 
+	// 후원항목별 총 후원금 데이터 가져오기
 	public HashMap<String, Integer> getData() {
 		String sql = "select item, sum(amount) AS total_amount from Donations group by item";
 
@@ -65,6 +68,40 @@ public class DonationDAO {
 				}
 		}
 		return dataMap;
+
+	}
+
+	// 후원항목별 후원 회원 수 데이터 가져오기
+	public HashMap<String, Integer> getUserData() {
+		String sql = "select item, count(user_id) as total_user from Donations group by item";
+
+		HashMap<String, Integer> pieMap = new HashMap<>();
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				String item = rs.getString("item");
+				Integer sum = rs.getInt("total_user");
+				pieMap.put(item, sum);
+			}
+			return pieMap;
+		} catch (Exception ex) {
+			System.out.println("getUserData 에러 : " + ex);
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException ex) {
+				}
+		}
+		return pieMap;
 
 	}
 
@@ -197,27 +234,36 @@ public class DonationDAO {
 	}
 
 	// 기부금영수증 상세보기
-	public DonationBean getDetail(int num) throws Exception { // 게시글 번호를 매개변수로 받는다
+	public HashMap<DonationBean, String> getDetail(int num) throws Exception { // 게시글 번호를 매개변수로 받는다
 		DonationBean donation = null;
+		
+		HashMap<DonationBean, String> map = new HashMap<>();
 
 		try {
 			pstmt = conn.prepareStatement("select * from Donations where donation_id = ?");
 			pstmt.setInt(1, num);
 
 			rs = pstmt.executeQuery();
+			
+			NumberFormat numberFormat  = NumberFormat.getInstance(Locale.US); // 숫자 천 단위로 , 찍기
 
 			if (rs.next()) {
 				donation = new DonationBean();
 				donation.setDonation_id(rs.getInt("donation_id"));
 				donation.setUser_id(rs.getInt("user_id"));
 				donation.setItem(rs.getString("item"));
-				donation.setAmount(rs.getInt("amount"));
+				
+				int amount = rs.getInt("amount");
+				String totalAmount = numberFormat.format(amount);
+				
 				donation.setPayment_date(rs.getString("payment_date"));
 				donation.setBank_name(rs.getString("bank_name"));
 				donation.setAccount_number(rs.getString("account_number"));
 				donation.setStart_date(rs.getDate("start_date"));
+				
+				map.put(donation, totalAmount);
 			}
-			return donation;
+			return map;
 		} catch (Exception ex) {
 			System.out.println("getDetail 실패 : " + ex);
 		} finally {
@@ -236,9 +282,11 @@ public class DonationDAO {
 	}
 
 	// 기부금영수증 이전 목록보기
-	public DonationBean getBeforeDetail(int num, String email) throws Exception { // 게시글 번호를 매개변수로 받는다
+	public HashMap<DonationBean, String> getBeforeDetail(int num, String email) throws Exception { // 게시글 번호를 매개변수로 받는다
 		DonationBean donation = null;
 
+		HashMap<DonationBean, String> map = new HashMap<>();
+		
 		try {
 			pstmt = conn.prepareStatement(
 					"select * from Donations join Users on Donations.user_id=Users.user_id where email = ? and donation_id=?");
@@ -246,21 +294,26 @@ public class DonationDAO {
 			pstmt.setInt(2, num);
 
 			rs = pstmt.executeQuery();
+			
+			NumberFormat numberFormat  = NumberFormat.getInstance(Locale.US); // 숫자 천 단위로 , 찍기
 
 			if (rs.next()) {
 				donation = new DonationBean();
 				donation.setDonation_id(rs.getInt("donation_id"));
 				donation.setUser_id(rs.getInt("user_id"));
 				donation.setItem(rs.getString("item"));
-				donation.setAmount(rs.getInt("amount"));
+				int amount = rs.getInt("amount");
+				String totalAmount = numberFormat.format(amount);
 				donation.setPayment_date(rs.getString("payment_date"));
 				donation.setBank_name(rs.getString("bank_name"));
 				donation.setAccount_number(rs.getString("account_number"));
 				donation.setStart_date(rs.getDate("start_date"));
+				
+				map.put(donation, totalAmount);
 			}
-			return donation;
+			return map;
 		} catch (Exception ex) {
-			System.out.println("getDetail 실패 : " + ex);
+			System.out.println("getBeforeDetail 실패 : " + ex);
 		} finally {
 			if (rs != null)
 				try {

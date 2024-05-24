@@ -246,6 +246,15 @@ boolean admin = isAdmin != null && isAdmin;
 					<a href="#">진행중인 캠페인</a> <a href="#">지난 캠페인</a>
 				</div>
 			</div>
+			<%if(admin){ %>
+			<div class="dropdown relative">
+				<span class="hover:text-blue-600 cursor-pointer px-8 font-medium">관리자</span>
+				<div
+					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
+					<a href="./DonationView.do">후원금 현황</a> <a href="./UserList.lo">회원관리</a>
+				</div>
+			</div>
+			<%} %>
 		</div>
 		<!-- 후원하기 버튼 -->
 		<div class="flex items-center">

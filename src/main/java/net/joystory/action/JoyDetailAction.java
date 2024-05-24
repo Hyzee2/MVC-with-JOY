@@ -16,7 +16,7 @@ import net.joystory.db.JoyStoryDAO;
 	   	JoyStoryBean joyBefore=new JoyStoryBean();
 	   	
 		int num=Integer.parseInt(request.getParameter("num")); // request로 전송받은 num 값을 num변수에 넣어준다 
-		int numBefore = num-1;
+		int numBefore = joydao.getBeforeNum(num);
 		
 		joydata=joydao.getDetail(num); // 상세정보 가져오기 select  
 		if(numBefore !=0) {

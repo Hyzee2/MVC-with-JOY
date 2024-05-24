@@ -479,7 +479,7 @@ body {
 				<span class="hover:text-blue-600 cursor-pointer px-8 font-medium">관리자</span>
 				<div
 					class="font-normal dropdown-content text-base rounded drop-shadow transition duration-300">
-					<a href="./DonationView.do">후원금 현황</a> <a href="#">회원관리</a>
+					<a href="./DonationView.do">후원금 현황</a> <a href="./UserList.lo">회원관리</a>
 				</div>
 			</div>
 			<%} %>

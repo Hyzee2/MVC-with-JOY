@@ -46,5 +46,11 @@ public class NoticeBean {
 	public void setRead_count(int read_count) {
 		this.read_count = read_count;
 	}
+	@Override
+	public String toString() {
+		return "NoticeBean [notice_id=" + notice_id + ", title=" + title + ", content=" + content + ", post_date="
+				+ post_date + ", file_name=" + file_name + ", read_count=" + read_count + "]";
+	}
 
+	
 }

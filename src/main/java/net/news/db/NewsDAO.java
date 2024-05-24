@@ -109,4 +109,37 @@ public class NewsDAO {
 		return null;
 	}
 
+	// 이전 공지사항 글번호 받아오기
+	public int getBeforeNum(int num) throws Exception { // 게시글 번호를 매개변수로 받는다
+		int beforeNum = 0;
+
+		try {
+			pstmt = conn.prepareStatement(
+					"select report_id from MediaReports where report_id = (select max(report_id) as num from MediaReports where report_id < ?)");
+			pstmt.setInt(1, num);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				beforeNum = rs.getInt("report_id");
+
+			}
+			return beforeNum;
+		} catch (Exception ex) {
+			System.out.println("getBeforeNum 실패 : " + ex);
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException ex) {
+				}
+		}
+		return 0;
+	}
+
 }

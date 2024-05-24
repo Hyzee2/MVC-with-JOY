@@ -9,14 +9,16 @@ import net.notice.db.NoticeDAO;
 
  public class NoticeDetailAction implements Action { // 게시글 상세보기 
 	 public ActionForward execute(HttpServletRequest request,HttpServletResponse response) throws Exception{ 
-		request.setCharacterEncoding("euc-kr");
+		request.setCharacterEncoding("utf-8");
    		
 		NoticeDAO noticedao=new NoticeDAO();
 	   	NoticeBean noticedata=new NoticeBean();
 	   	NoticeBean noticeBefore=new NoticeBean();
 	   	
 		int num=Integer.parseInt(request.getParameter("num")); // request로 전송받은 num 값을 num변수에 넣어준다 
-		int numBefore = num-1;
+		int numBefore = noticedao.getBeforeNum(num);
+		
+		System.out.println("numBefore: "+numBefore);
 		
 		noticedao.setReadCountUpdate(num); // 조회수 증가 update
 		noticedata=noticedao.getDetail(num); // 상세정보 가져오기 select  

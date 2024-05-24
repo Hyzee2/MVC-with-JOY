@@ -11,8 +11,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-import net.notice.db.NoticeBean;
-
 public class JoyStoryDAO {
 	static Connection conn;
 	PreparedStatement pstmt;
@@ -109,6 +107,39 @@ public class JoyStoryDAO {
 				}
 		}
 		return null;
+	}
+
+	// 이전 공지사항 글번호 받아오기
+	public int getBeforeNum(int num) throws Exception { // 게시글 번호를 매개변수로 받는다
+		int beforeNum = 0;
+
+		try {
+			pstmt = conn.prepareStatement(
+					"select story_id from JoyStories where story_id = (select max(story_id) as num from JoyStories where story_id < ?)");
+			pstmt.setInt(1, num);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				beforeNum = rs.getInt("story_id");
+
+			}
+			return beforeNum;
+		} catch (Exception ex) {
+			System.out.println("getBeforeNum 실패 : " + ex);
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException ex) {
+				}
+		}
+		return 0;
 	}
 
 }

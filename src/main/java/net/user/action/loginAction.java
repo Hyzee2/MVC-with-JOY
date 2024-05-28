@@ -52,7 +52,7 @@ import net.user.db.UserDAO;
 				 session.setAttribute("email", email);
 				 
 				 forward.setRedirect(true); // 리다이렉트로 전송 ( url 변경) 
-				 forward.setPath("./Main.lo?email="+email);
+				 forward.setPath("./Main.lo");
 				 return forward;
 			 }
 			 }catch(Exception ex) {

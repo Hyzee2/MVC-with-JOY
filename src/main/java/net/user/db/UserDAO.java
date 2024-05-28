@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -168,9 +169,11 @@ public class UserDAO {
 
 	// 회원 목록보기
 	public List<Map.Entry<UserBean, String>> getUserList() { // List형으로 반환
-		String sql = "select Users.user_id, email, name, total_donation from (select user_id, sum(amount) as total_donation from Donations group by user_id) as a right join Users on Users.user_id = a.user_id";
+		String sql = "select Users.user_id, email, name, total_donation from (select user_id, sum(amount) as total_donation from Donations group by user_id) as a right join Users on Users.user_id = a.user_id order by 4 DESC";
 
-		HashMap<UserBean, String> map = new HashMap<>();
+	    List<Map.Entry<UserBean, String>> list = new ArrayList<>(); // 총 후원금이 순서대로 담기기 위해 ArrayList안에 Map형태로 데이터를 담아줌. 
+
+//		HashMap<UserBean, String> map = new HashMap<>();
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -186,15 +189,16 @@ public class UserDAO {
 				user.setEmail(rs.getString("email"));
 				user.setName(rs.getString("name"));
 				
-				
 				int number = rs.getInt("total_donation");
 				String totalDonation = numberFormat.format(number);
 				
-				map.put(user, totalDonation);
+	            Map.Entry<UserBean, String> entry = new AbstractMap.SimpleEntry<>(user, totalDonation); // AbstractMap.SimpleEntry는 Map.Entry를 구현한 간단한 클래스. 키와 값을 쉽게 저장하고 사용할 수 있다. 
+				list.add(entry);
+//				map.put(user, totalDonation);
 				
 			}
 			
-			List<Map.Entry<UserBean, String>> list = new ArrayList<>(map.entrySet()); // HashMap entry를 리스트로 변환
+//			List<Map.Entry<UserBean, String>> list = new ArrayList<>(map.entrySet()); // HashMap entry를 리스트로 변환
 			return list; // HashMap 결과 값들을 담은 list 반환
 			
 		} catch (Exception ex) {
